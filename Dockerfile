@@ -2,7 +2,6 @@
 # The MIT License (MIT)
 # Copyright (c) Dockerfile Project
 #
-#
 FROM ubuntu:14.04
 
 RUN \
@@ -55,9 +54,9 @@ RUN \
 
 RUN \
   cd /opt &&\
-  wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-1.6.1-20140814.tar.gz &&\
-  tar xvf mecab-ko-dic-1.6.1-20140814.tar.gz &&\
-  cd /opt/mecab-ko-dic-1.6.1-20140814 &&\
+  wget https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.0.1-20150825.tar.gz &&\
+  tar xvf mecab-ko-dic-2.0.1-20150825.tar.gz &&\
+  cd /opt/mecab-ko-dic-2.0.1-20150825 &&\
   ./autogen.sh &&\
   ./configure &&\
   make &&\
