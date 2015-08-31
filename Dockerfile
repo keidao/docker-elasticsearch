@@ -92,3 +92,4 @@ CMD /elasticsearch/bin/elasticsearch -Djava.library.path=/usr/local/lib
 #   - 9300: transport
 EXPOSE 9200
 EXPOSE 9300
+ 
