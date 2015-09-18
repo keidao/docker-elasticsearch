@@ -5,9 +5,22 @@
 FROM ubuntu:14.04
 
 RUN \
-  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
+  sed -i 's/archive.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list && \
+  sed -i 's/security.ubuntu.com/ftp.daum.net/g' /etc/apt/sources.list 
+# sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list
+RUN \
   apt-get update && \
-  apt-get -y upgrade && \
+  apt-get upgrade -y
+
+# 한글 설정
+ENV LANG ko_KR.UTF-8
+ENV LANGUAGE ko_KR.UTF-8
+ENV LC_ALL ko_KR.UTF-8
+RUN apt-get install -y language-pack-ko 
+RUN locale-gen ko_KR.UTF-8
+ADD config/.vimrc /root/.vimrc
+
+RUN \
   apt-get install -y build-essential && \
   apt-get install -y software-properties-common && \
   apt-get install -y byobu curl git htop man unzip vim wget && \
@@ -27,11 +40,15 @@ WORKDIR /data
 
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-ENV ES_PKG_NAME elasticsearch-1.6.0
+ENV ES_PKG_NAME elasticsearch-1.7.0
 
 RUN \
   apt-get update &&\
   apt-get install -y automake perl build-essential
+
+
+RUN \
+  apt-get install -y mysql-client
 
 # Install Elasticsearch.
 RUN \
@@ -81,8 +98,23 @@ ADD config/elasticsearch.yml /elasticsearch/config/elasticsearch.yml
 
 RUN /elasticsearch/bin/plugin --install analysis-mecab-ko-0.17.0 --url https://bitbucket.org/eunjeon/mecab-ko-lucene-analyzer/downloads/elasticsearch-analysis-mecab-ko-0.17.0.zip
 
+# Install Plugin
+RUN /elasticsearch/bin/plugin --install mobz/elasticsearch-head
+RUN /elasticsearch/bin/plugin --install river-csv --url https://github.com/AgileWorksOrg/elasticsearch-river-csv/releases/download/2.2.1/elasticsearch-river-csv-2.2.1.zip
+RUN /elasticsearch/bin/plugin --install sql --url https://github.com/NLPchina/elasticsearch-sql/releases/download/1.3.5/elasticsearch-sql-1.3.5.zip 
+
 # Define working directory.
 WORKDIR /data
+
+# Ruby install
+# sudo gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+# curl -L https://get.rvm.io | sudo bash -s stable 
+# exec su -l
+# rvm install 2.0.0
+# gem update --system
+# gem install mysql2xxxx
+
+# Php install
 
 # Define default command.
 CMD /elasticsearch/bin/elasticsearch -Djava.library.path=/usr/local/lib
